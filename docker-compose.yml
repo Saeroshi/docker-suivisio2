@@ -1,0 +1,32 @@
+version: "3"
+
+networks:
+  http_suivisio2:
+    external: false
+
+services:
+  siosuivi2:
+    image: saeroshi/siosuivi2:latest
+    container_name: siosuivi2
+    restart: ${RESTART_MODE}
+    ports:
+      - "80:80"
+    environment:
+      UID: ${UID}
+      GID: ${GID}
+    volumes:
+      - ${VOLUMES_ROOT_PATH}/data:/data
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10.2
+    container_name: mariadb_suivisio2
+    restart: ${RESTART_MODE}
+    environment:
+      - MYSQL_DATABASE=suivisio2
+      - MYSQL_USER=suivisio2
+      - MYSQL_PASSWORD=${DATABASE_USER_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ${VOLUMES_ROOT_PATH}/mysql:/var/lib/mysql
